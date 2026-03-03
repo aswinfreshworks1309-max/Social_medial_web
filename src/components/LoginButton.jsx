@@ -2,7 +2,7 @@ import React from "react";
 
 const LoginButton = () => {
     return (
-        <>
+        <React.Fragment>
             <style>{`
         .box-button {
           color: black;
@@ -80,7 +80,7 @@ const LoginButton = () => {
             <button className="box-button">
                 <span className="box-span">Login</span>
             </button>
-        </>
+        </React.Fragment>
     );
 };
 
