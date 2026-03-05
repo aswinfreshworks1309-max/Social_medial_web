@@ -12,17 +12,14 @@ const DashBoard = () => {
             <Header/>
         <div
             className="min-h-screen w-full flex gap-6 p-6"
-            style={{
-                backgroundImage:
-                    "linear-gradient(109.6deg, rgba(177,173,219,1) 11.2%, rgba(245,226,226,1) 91.1%)",
-            }}
+      
         >
-            {/* Sidebar */}
+       
             <aside className="flex gap-4 flex-col">
                 <SideBar/>
             </aside>
 
-            {/* Main Feed */}
+       
             <div className="flex justify-start items-start flex-col w-full">
                 {/* Create Post */}
                 <div className="flex justify-start flex-col gap-5 w-full border border-slate-200 p-6 rounded-2xl bg-white shadow-sm">
@@ -39,7 +36,7 @@ const DashBoard = () => {
                         <input
                             type="text"
                             placeholder="What is on your mind?"
-                            className="h-[50px] w-[500px] border border-slate-300 p-3 rounded-xl focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 focus:outline-none bg-slate-50"
+                            className="h-[50px] w-[500px] border border-slate-300 p-3 rounded-xl  focus:ring-indigo-200 focus:outline-none bg-slate-50"
                         />
                     </div>
 
@@ -80,7 +77,6 @@ const DashBoard = () => {
 
 export default DashBoard;
 
-/* ================= POST CARD ================= */
 
 function PostCard() {
     return (
@@ -101,7 +97,7 @@ function PostCard() {
                 <p className="text-slate-700 leading-relaxed">
                     Just finished building the new layout for ConnectHub. The teal and
                     purple gradient looks amazing in the dark theme as well! What do you
-                    guys think? 🚀
+                    guys think? 
                 </p>
             </div>
 
