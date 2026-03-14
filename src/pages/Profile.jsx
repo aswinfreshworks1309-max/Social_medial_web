@@ -2,82 +2,160 @@ import React from 'react'
 import { location, post } from '../data/profile'
 import profile from "../assets/profile.png";
 import { Button } from '@mui/material';
-import { User } from 'lucide-react'
+import { User, MessageCircle, Heart } from 'lucide-react'
 import { image } from '../data/profile'
 import Header from '../components/Header';
 import SideBar from '../components/SideBar';
 
 
-
 const Profile = () => {
+
     return (
-        <div >
+        <div className='w-full min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white'>
             <Header />
+            <div className='flex'>
+                <aside className='w-[20%]'>
+                    <SideBar />
+                </aside>
 
-            <div >
+                <main className='flex-1 ml-[10px]'>
+                    {/* Profile Header Section */}
+                    <div className='max-w-5xl mx-auto px-6 py-8'>
+                        <div className='flex justify-between items-start gap-16 mb-12'>
+                            {/* Profile Image */}
+                            <div className='flex-shrink-0'>
+                                <div className='relative'>
+                                    <img
+                                        src={profile}
+                                        alt="Profile"
+                                        className='h-40 w-40 rounded-full object-cover border-4 border-[#8798EEFF] shadow-2xl'
+                                    />
+                                    <div className='absolute bottom-3 right-3 w-5 h-5 bg-green-400 rounded-full border-2 border-white'></div>
+                                </div>
+                            </div>
 
+                            {/* Profile Info */}
+                            <div className='flex-1'>
+                                <div className='flex items-baseline gap-4 mb-4'>
+                                    <h1 className='text-3xl font-bold'>Felix Wanderer</h1>
+                                    <span className='px-4 py-2 bg-[#8798EEFF] rounded-full text-sm font-semibold hover:bg-teal-600 transition cursor-pointer'>
+                                        Verified
+                                    </span>
+                                </div>
 
-                <div className='h-[300px] w-[100%]'>
-                    <img src={profile} alt="" className='h-[300px] w-[100%] object-cover' />
+                                <p className='text-xl text-gray-300 mb-6'>Creative Director & Visual Storyteller</p>
 
-                </div>
-                <div className='flex justify-between items-center mt-10 '>
+                                {/* Stats */}
+                                <div className='flex gap-12 mb-6'>
+                                    {post.map((stat, i) => (
+                                        <div key={i} className='text-center'>
+                                            <p className='text-2xl font-bold text-white'>{stat.no}</p>
+                                            <p className='text-gray-400 text-sm uppercase tracking-wider'>{stat.post}</p>
+                                        </div>
+                                    ))}
+                                </div>
 
+                                {/* Location Info */}
+                                <div className='flex items-center gap-6 text-gray-400 text-sm mb-6'>
+                                    <div className='flex gap-2'>
+                                        {location.map((item, i) => (
+                                            <span key={i} className='flex items-center gap-1 hover:text-[#8798EEFF] transition cursor-pointer'>
+                                                {item}
+                                                {i < location.length - 1 && <span>•</span>}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
 
-                    <div className=' flex gap-8   justify-center items-center ml-5  '>
-                        <img src={profile} alt="Profile image" className='h-[150px] w-[150px] rounded-[50%]' />
-                        <div >
-                            <h1 className='text-2xl'> <b>Felix Wanderer</b></h1>
-                            <h2>Creative Director & Digital Artist</h2>
-                            <div className='flex gap-4 '>
-                                {location.map((x, i) => <p key={i} >{x}</p>)}
+                                {/* Action Buttons */}
+                                <div className='flex gap-4'>
+                                    <Button
+                                        variant="outlined"
+                                        sx={{
+                                            borderColor: '#8798EEFF',
+                                            color: '#8798EEFF',
+                                            textTransform: 'none',
+                                            fontSize: '16px',
+                                            padding: '8px 24px',
+                                            '&:hover': {
+                                                borderColor: '#8798EEFF',
+                                                backgroundColor: '#8798EEFF',
+                                                color:'white'
+                                            }
+                                        }}
+                                    >
+                                        Edit Profile
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        sx={{
+                                            background: '#8798EEFF',
+                                            textTransform: 'none',
+                                            fontSize: '16px',
+                                            padding: '8px 24px',
+                                            '&:hover': {
+                                                color: '#8798EEFF',
+                                                borderColor: '#8798EEFF',                
+                                                backgroundColor: 'transparent',
+                                            }
+                                        }}
+                                    >
+                                        <User className='w-5 h-5 mr-2' />
+                                        Follow
+                                    </Button>
+                                    <Button
+                                        variant="outlined"
+                                        sx={{
+                                            borderColor: '#666',
+                                            color: '#fff',
+                                            textTransform: 'none',
+                                            fontSize: '16px',
+                                            padding: '8px 20px',
+                                            '&:hover': {
+                                                borderColor: '#999'
+                                            }
+                                        }}
+                                    >
+                                        <MessageCircle className='w-5 h-5' />
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Bio Section */}
+                        <div className='border-t border-gray-700 pt-8 mb-8'>
+                            <h3 className='text-lg font-semibold mb-3'>About Me</h3>
+                            <p className='text-gray-400 leading-relaxed max-w-2xl'>
+                                Architectural Photographer & Visual Storyteller. Exploring the intersection of light and structure.
+                                Based in New York City. 📍 Available for collaborations and commissioned work.
+                            </p>
+                        </div>
+
+                        {/* Posts Section */}
+                        <div className='border-t border-gray-700 pt-6'>
+                            <h3 className='text-lg font-semibold mb-8'>Posts</h3>
+
+                            {/* Posts Grid */}
+                            <div className='grid grid-cols-3 gap-4 pb-12'>
+                                {image.map((img, i) => (
+                                    <div
+                                        key={i}
+                                        className='group relative overflow-hidden rounded-lg aspect-square cursor-pointer'
+                                    >
+                                        <img
+                                            src={img}
+                                            alt={`Post ${i + 1}`}
+                                            className='w-full h-full object-cover group-hover:scale-105 transition duration-300'
+                                        />
+                   
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
-
-
-                    <div className='flex gap-5 justify-center items-center mr-15'>
-                        <Button variant="outlined" >Edit Profile</Button>
-                        <Button variant="contained" sx={{ background: "#00C2B0FF" }}><User />Follow</Button>
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div className='flex gap-5 '>
-
-                {post.map((x, i) => (
-                    <div key={i} className='h-[80px] w-[100px]  flex flex-col justify-center items-center'><b className='text-[18px] text-shadow-[#00C2B0FF] shadow-lg'>{x.post}</b><h3>{x.no}</h3>
-                    </div>))}
-            </div>
-            <div className='ml-8 w-[500px] border p-3 rounded-2xl shadow-lg shadow-[#00C2B0FF] mt-5'>
-                <b className='text-2xl'>About Me</b>
-                <p >Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit minima incidunt itaque sint optio dolorem ipsum nemo aliquam inventore excepturi!</p>
-            </div>
-
-            <div className='flex flex-col gap-10 flex-wrap mt-[50px] ml-7'>
-
-                <h3 className='text-3xl'>
-                    Posts
-                </h3>
-
-                <hr />
-                <div className='flex gap-5 mb-[50px]'>
-
-                    {image.map((x, i) => (
-                        <div key={i} className='h-auto flex flex-col w-[300px] border p-4 rounded-2xl shadow-lg shadow-[#00C2B0FF] hover:-translate-y-2 transition-transform duration-300' >
-                            <img key={i} src={x} alt="image" className='h-[350px] w-full object-cover' />
-                            <h1 className='text-center mt-2 font-bold'>Post {i + 1}</h1>
-                            <b>Description</b>
-                            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nobis, reprehenderit!</p>
-
-                        </div>
-                    ))}
-                </div>
+                </main>
             </div>
         </div>
-
     )
 }
 

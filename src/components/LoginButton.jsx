@@ -1,30 +1,27 @@
 import React from "react";
 
-const LoginButton = () => {
-    return (
-        <React.Fragment>
-            <style>{`
+const Button = ({ text = "Button", type = "button", onClick, className = "" }) => {
+  return (
+    <>
+      <style>{`
         .box-button {
           color: black;
-          text-decoration: none;
           cursor: pointer;
           outline: none;
           border: none;
-          background-color: #00C2B0FF;
-          border-radius:10px
+          background-color: #8798EEFF;
+          border-radius:10px;
         }
 
         .box-span {
           width: 170px;
-          height: auto;
-          float: left;
+          display: block;
           transition: 0.5s linear;
           position: relative;
-          display: block;
           overflow: hidden;
           padding: 15px;
           text-align: center;
-          border-radius:10px
+          border-radius:10px;
           background: transparent;
           text-transform: uppercase;
           font-weight: 600;
@@ -57,7 +54,7 @@ const LoginButton = () => {
         }
 
         .box-span:hover {
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
         .box-span:hover::before {
@@ -77,11 +74,11 @@ const LoginButton = () => {
         }
       `}</style>
 
-            <button className="box-button">
-                <span className="box-span">Login</span>
-            </button>
-        </React.Fragment>
-    );
+      <button type={type} onClick={onClick} className={`box-button ${className}`}>
+        <span className="box-span">{text}</span>
+      </button>
+    </>
+  );
 };
 
-export default LoginButton;
+export default Button;
