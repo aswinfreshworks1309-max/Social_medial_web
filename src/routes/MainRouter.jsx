@@ -4,6 +4,8 @@ import MainLayout from "../layout/MainLayout";
 import DashBoard from "../pages/DashBoard";
 import Profile from '../pages/Profile'
 import Chat from '../pages/Chat'
+import CreatePost from '../pages/CreatePost'
+import Notification from "../pages/Notification";
 
 
 const mainRouter = {
@@ -11,28 +13,33 @@ const mainRouter = {
     element: <MainLayout />,
     children: [
         {
-            path: "/register",
-            element: <Register />
-        },
-        {
             path: '/login',
-            element: <Login />
+            element: <Login />,
 
         },
         {
             path: '/dashboard',
-            element: <DashBoard />
+            element: <DashBoard />,
 
         },
         {
             path: '/profile',
-            element: <Profile />
+            element: <Profile />,
 
         },
         {
             path: '/chat',
-            element: <Chat />
+            element: <Chat />,
         },
+        {
+            path: '/post',
+            element: <CreatePost />,
+        },
+        {
+            path: '/notification',
+            element: <Notification />,
+            
+        }
 
     ]
 

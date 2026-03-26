@@ -47,7 +47,7 @@ const Profile = () => {
 
                                 {/* Stats */}
                                 <div className='flex gap-12 mb-6'>
-                                    {post.map((stat, i) => (
+                                    {post?.map((stat, i) => (
                                         <div key={i} className='text-center'>
                                             <p className='text-2xl font-bold text-white'>{stat.no}</p>
                                             <p className='text-gray-400 text-sm uppercase tracking-wider'>{stat.post}</p>
@@ -58,7 +58,7 @@ const Profile = () => {
                                 {/* Location Info */}
                                 <div className='flex items-center gap-6 text-gray-400 text-sm mb-6'>
                                     <div className='flex gap-2'>
-                                        {location.map((item, i) => (
+                                        {location?.map((item, i) => (
                                             <span key={i} className='flex items-center gap-1 hover:text-[#8798EEFF] transition cursor-pointer'>
                                                 {item}
                                                 {i < location.length - 1 && <span>•</span>}

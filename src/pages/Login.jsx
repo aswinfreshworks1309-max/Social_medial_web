@@ -3,19 +3,26 @@ import { Link } from 'react-router-dom'
 import LoginButton from '../components/LoginButton'
 import { Formik, ErrorMessage, Field, Form } from 'formik'
 import * as yup from 'yup'
-import { Password } from '@mui/icons-material'
+import axios from 'axios'
+import { API_URL } from '../config/config'
 
 
 
 
 const Login = () => {
-
   const schemaValidation = yup.object({
-    email:yup.string().required("Email is required"),
+    email:yup.string().email("invalid Email").required("Email is required"),
     password:yup.string().required("Password is required")
   })
+
+  const handleLogin = async (values) => {
+    const response = await axios.post(`${API_URL}/login`,values)
+    console.log(response)
+
+  }
   return (
-    <>    <section className='flex justify-center items-center h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'>
+    <>
+      <section className='flex justify-center items-center h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'>
       <header className=' w-full h-[80px]  border-[1px] border-gray-400 absolute top-0 left-0 flex justify-start items-center'>
         <h1 className='text-3xl font-bold text-[#8798EEFF] ml-[4%]'>ConnectHub</h1>
       </header><br />
@@ -31,9 +38,10 @@ const Login = () => {
         <Formik
           initialValues={{ email: "", password: "" }}
           validationSchema={schemaValidation}
+          onSubmit={handleLogin}
         >
           
-        <Form typeof='submit' className='flex flex-col gap-4 justify-center items-center'>
+        <Form className='flex flex-col gap-4 justify-center items-center'>
           <div className='flex flex-col gap-2'>
             <label htmlFor="Email Address" className='text-white'>Email Address</label>
     <Field type="email" id="Email Address" placeholder='Enter your Email' name = "email" className='h-[40px] w-[300px] border-[1px] text-white border-gray-500 p-[10px] rounded-[7px] focus:border-[2px] focus:border-[#8798EEFF] focus:outline-none placeholder:text-gray-400 ' />
@@ -47,9 +55,9 @@ const Login = () => {
           <div className='flex justify-start w-[300px] gap-2'>
             <input type="checkbox" id="remember-me" /><label htmlFor="remember-me" className='text-gray-300'>Keep me logged in</label>
           </div>
-          <Link to="/register">  <LoginButton text='Login'/></Link>
+          <LoginButton text='Login' type='submit'/>
 
-          <p className='text-white'>Don't have an account ? <a href="/register" className=' text-[#8798EEFF]'>Register</a></p>
+          <p className='text-white'>Don't have an account ? <Link to="/" className=' text-[#8798EEFF]'>Register</Link></p>
         </Form>
       </Formik>
       </main>

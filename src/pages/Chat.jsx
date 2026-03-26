@@ -6,72 +6,93 @@ import { contacts } from '../data/chat.js';
 import chat_1 from '../assets/chat_1.png'
 
 const Chat = () => {
-
-    const [white, setWhite] = useState(true);
     return (
-        <div className='bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'>
+        <div className='w-full min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white'>
             <Header />
-            <div className='flex '    >
-
-                <aside>
+            <div className='flex'>
+                <aside className='w-[20%]'>
                     <SideBar />
                 </aside>
-                <hr />
-                <aside className='border-[1px] border-gray-400 p-5 rounded-lg'>
-                    <div>
-                        <div className='flex flex-col gap-10'>
-                            <h1 className='text-[20px] mt-4 text-white'>Message</h1>
+
+                <main className='flex-1 flex h-[calc(100vh-80px)]'>
+                    {/* Contacts List */}
+                    <aside className='w-[350px] border-r border-gray-700 p-6 flex flex-col gap-6 overflow-y-auto'>
+                        <div className='flex flex-col gap-6'>
+                            <h1 className='text-2xl font-bold'>Messages</h1>
                             <div className='relative'>
-                                <input type="text" placeholder='Search Messages...' className='border-2 border-white h-[40px] w-[300px] pl-[40px] rounded-2xl placeholder:text-gray-400' />
-                                <Search className='absolute  top-2 left-2 text-white' />
+                                <input
+                                    type="text"
+                                    placeholder='Search messages...'
+                                    className='w-full bg-[#5e606721] border border-gray-700 h-[45px] pl-11 pr-4 rounded-xl text-white placeholder:text-gray-500 focus:outline-none focus:border-[#8798EEFF]'
+                                />
+                                <Search className='absolute top-3 left-3 text-gray-500' size={20} />
                             </div>
                         </div>
-                    </div>
 
-                    {
-                        contacts.map((contact, index) => (
+                        <div className='flex flex-col gap-2'>
+                            {contacts.map((contact, index) => (
+                                <div
+                                    key={index}
+                                    className={`flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all ${index === 0 ? 'bg-[#8798EEFF] text-white' : 'hover:bg-[#5e606721]'}`}
+                                >
+                                    <div className='relative'>
+                                        <img src={contact.image} alt={contact.name} className='h-12 w-12 rounded-full object-cover' />
+                                        <div className='absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-900'></div>
+                                    </div>
+                                    <div className='flex-1 overflow-hidden'>
+                                        <h3 className='font-semibold truncate'>{contact.name}</h3>
+                                        <p className={`text-sm truncate ${index === 0 ? 'text-blue-100' : 'text-gray-400'}`}>{contact.lastMessage}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </aside>
 
-                            <div key={index} className='flex items-center gap-3 p-2 hover:bg-[#8798EEFF] rounded-lg mt-5 cursor-pointer bg-gray-300'>
-                                <img src={contact.image} alt={contact.name} className='h-[56px] w-[56px] rounded-full object-cover' />
+                    {/* Chat Window */}
+                    <section className='flex-1 flex flex-col bg-black/10'>
+                        {/* Chat Header */}
+                        <div className='p-6 border-b border-gray-700 flex items-center justify-between'>
+                            <div className='flex items-center gap-4'>
+                                <img src={chat_1} alt="Current contact" className='h-12 w-12 rounded-full object-cover' />
                                 <div>
-                                    <h1>{contact.name}</h1>
-                                    <p>{contact.lastMessage}</p>
-
+                                    <h3 className='font-bold text-lg'>John Doe</h3>
+                                    <p className='text-xs text-green-400'>Online</p>
                                 </div>
                             </div>
-                        ))
-                    }
-                </aside>
-
-                <div className='h-[87vh] w-full border-right-[1px] '>
-                    <div className='w-full h-[80px] border-[1px]  flex items-center gap-5 rounded-lg  border-gray-400 '>
-                        <img src={chat_1} alt="profile image" className='h-[56px] w-[56px] rounded-full ml-5' />
-                        <div>
-                            <h1 className='font-bold text-2xl text-white'>John Doe</h1>
-                            <p className='text-sm text-gray-400 '>Online</p>
                         </div>
-                    </div>
 
-                    <div className='w-full h-[80vh] relative p-5'>
-                        <div>
+                        {/* Messages Area */}
+                        <div className='flex-1 p-6 overflow-y-auto flex flex-col gap-4'>
+                            <div className='max-w-[70%] self-end bg-[#8798EEFF] px-5 py-3 rounded-2xl rounded-tr-none text-white shadow-lg'>
+                                <p>Hey! How's the project going?</p>
+                                <span className='text-[10px] text-blue-100 mt-1 block text-right'>10:45 AM</span>
+                            </div>
 
-                            <div className='w-[40%] h-[40px] bg-[#8798EEFF] rounded-2xl flex justify-center items-center text-black ml-auto mt-5'>Hello, how are you?</div>
-                            <div className='w-[40%] h-[40px] bg-gray-300 rounded-2xl flex justify-center items-center text-black mt-5'>I am good, thanks for asking!</div>
+                            <div className='max-w-[70%] self-start bg-[#5e606721] border border-gray-700 px-5 py-3 rounded-2xl rounded-tl-none text-white shadow-lg'>
+                                <p>It's coming along great! Just finished the notification module.</p>
+                                <span className='text-[10px] text-gray-400 mt-1 block'>10:47 AM</span>
+                            </div>
 
-
-                        </div>
-                        <div className='absolute bottom-10 flex gap-5 items-center'>
-
-                            <textarea name="Enter your text here" placeholder="Type your message..." className='border-2 border-gray-400 h-[60px] w-[700px] pl-[40px] rounded-2xl placeholder:text-gray-400 pt-4' />
-                            <div className='h-[50px] w-[70px] bg-[#8798EEFF] rounded-2xl flex justify-center items-center'>
-
-                                <Send size={35} className='cursor-pointer' />
+                            <div className='max-w-[70%] self-end bg-[#8798EEFF] px-5 py-3 rounded-2xl rounded-tr-none text-white shadow-lg'>
+                                <p>Perfect! Can't wait to see the final version. 🔥</p>
+                                <span className='text-[10px] text-blue-100 mt-1 block text-right'>10:48 AM</span>
                             </div>
                         </div>
 
-                    </div>
-
-                </div>
+                        {/* Input Area */}
+                        <div className='p-6 border-t border-gray-700'>
+                            <div className='flex items-center gap-4 bg-[#5e606721] border border-gray-700 rounded-2xl p-2 pl-4'>
+                                <textarea
+                                    placeholder="Type your message..."
+                                    className='flex-1 bg-transparent border-none focus:ring-0 text-white placeholder:text-gray-500 resize-none py-2 h-10'
+                                />
+                                <button className='bg-[#8798EEFF] p-3 rounded-xl hover:bg-[#7687d6] transition-colors'>
+                                    <Send size={20} className='text-white' />
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </main>
             </div>
         </div>
     )
