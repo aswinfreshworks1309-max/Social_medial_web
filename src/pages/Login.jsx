@@ -5,21 +5,32 @@ import { Formik, ErrorMessage, Field, Form } from 'formik'
 import * as yup from 'yup'
 import axios from 'axios'
 import { API_URL } from '../config/config'
+import { useNavigate } from 'react-router-dom'
 
 
 
 
 const Login = () => {
+  const navigate = useNavigate()
   const schemaValidation = yup.object({
     email:yup.string().email("invalid Email").required("Email is required"),
     password:yup.string().required("Password is required")
   })
 
   const handleLogin = async (values) => {
-    const response = await axios.post(`${API_URL}/login`,values)
-    console.log(response)
-
-  }
+    try {
+      const response = await axios.post(`${API_URL}/login`, values);
+      if (response.status === 200 && response.data.user) {
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        navigate('/dashboard');
+      } else {
+        alert(response.data.message || "Login failed");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      alert(err.response?.data?.message || "Invalid credentials. Please try again.");
+    }
+  };
   return (
     <>
       <section className='flex justify-center items-center h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'>

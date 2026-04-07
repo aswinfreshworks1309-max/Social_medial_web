@@ -28,6 +28,10 @@ const mainRouter = {
 
         },
         {
+            path: '/profile/:id',
+            element: <Profile />,
+        },
+        {
             path: '/chat',
             element: <Chat />,
         },

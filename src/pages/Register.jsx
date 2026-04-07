@@ -6,6 +6,7 @@ import * as yup from 'yup'
 import axios from 'axios';
 import { Camera } from 'lucide-react'
 import { API_URL } from '../config/config.js'
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -24,39 +25,44 @@ const Register = () => {
     });
 
 
+    const navigate = useNavigate();
     // image uploading
     const [image, setImage] = useState(null)
+    const [imageFile, setImageFile] = useState(null)
 
     const handleImage = (e) => {
         const file = e.target.files[0]
         if (file) {
+            setImageFile(file);
             const imageUrl = URL.createObjectURL(file);
             setImage(imageUrl);
-
         }
-
     }
 
     // form handling
-    const handleRegister = async(values) => {
-        const payload = {
-            firstName: values.firstName,
-            lastName: values.lastName,
-            email: values.email,
-            password:values.password,
-        }
+    const handleRegister = async (values) => {
         try {
-            
-            const response = await axios.post(`${API_URL}/register`, payload)
-            console.log(response.data)
-        } catch (err) {
-            console.log("some error happened",err)
-        }
-        if (response.status === 201) {
-            alert(response.data.message)
-        }
-       
+            const formData = new FormData();
+            formData.append('firstName', values.firstName);
+            formData.append('lastName', values.lastName);
+            formData.append('email', values.email);
+            formData.append('password', values.password);
+            if (imageFile) {
+                formData.append('avatar', imageFile);
+            }
 
+            const response = await axios.post(`${API_URL}/register`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+
+            if (response.status === 200 || response.status === 201) {
+                alert("Account created successfully!");
+                navigate('/login');
+            }
+        } catch (err) {
+            console.error("Registration error:", err);
+            alert(err.response?.data?.message || "Registration failed. Please try again.");
+        }
     }
     return (
         <>

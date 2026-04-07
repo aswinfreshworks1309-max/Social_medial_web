@@ -63,7 +63,7 @@ function PostCard({ post, onPostDeleted }) {
     };
 
     return (
-        <div className='bg-white border border-gray-100 rounded-xl overflow-hidden mb-8 shadow-sm transition-all hover:shadow-md w-full mx-auto '>
+        <div className='bg-white border border-gray-100 rounded-xl overflow-hidden mb-8 shadow-sm transition-all hover:shadow-md w-[550px]  '>
             <div className='p-5'>
                 <div className='flex justify-between items-center mb-4'>
                     <div className='flex items-center gap-3'>
@@ -74,7 +74,7 @@ function PostCard({ post, onPostDeleted }) {
                                 <span className='text-sm'>U</span>
                             )}
                         </Link>
-                        <div>
+                        <div>   
                             <Link to={userId ? `/profile/${userId}` : '/profile'} className='font-bold text-black hover:underline text-[14px]'>{authorName || 'User'}</Link>
                             <p className='text-[10px] text-gray-400 font-bold uppercase tracking-widest'>{timeAgo}</p>
                         </div>
