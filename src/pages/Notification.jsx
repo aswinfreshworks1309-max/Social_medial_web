@@ -10,10 +10,12 @@ import { io } from 'socket.io-client'
 
 const socket = io('http://localhost:4000');
 
+import { useSelector } from 'react-redux'
+
 function Notification(){
     const [notification, setNotification] = useState([]);
     const [loading, setLoading] = useState(true);
-    const user = JSON.parse(localStorage.getItem('user')) || {};
+    const user = useSelector((state) => state.user.user) || {};
     const navigate = useNavigate();
 
     useEffect(() => {

@@ -19,7 +19,10 @@ import axios from "axios";
 import { API_URL } from "../config/config";
 import { UserPlus } from "lucide-react";
 
+import { useSelector } from "react-redux";
+
 const DashBoard = () => {
+    const user = useSelector((state) => state.user.user) || {};
     const [value, setValue] = useState('')
     const [posts, setPosts] = useState([])
     const [imagePreview, setImagePreview] = useState(null)
@@ -28,7 +31,6 @@ const DashBoard = () => {
     const [isLoadingConnections, setIsLoadingConnections] = useState(false)
     const [isExpanded, setIsExpanded] = useState(false)
     const [followingList, setFollowingList] = useState([])
-    const user = JSON.parse(localStorage.getItem('user')) || {};
 
 
 
@@ -131,7 +133,7 @@ const DashBoard = () => {
     }
 
     return (
-        <div className="w-full min-h-screen bg-gray-500 text-[#0a8fd2]">
+        <div className="w-full min-h-screen bg-gray-500 text-[#5DD3B6]">
             <Header />
             <div className="flex mt-[20px]">
                 <aside className="w-[20%]">
@@ -143,7 +145,7 @@ const DashBoard = () => {
                         {/* Create Post Section */}
                         <div className="flex flex-col gap-5 w-[550px] border  border-gray-700 p-6 rounded-2xl bg-white shadow-sm mb-8">
                             <div className="flex gap-5 items-start">
-                                <div className="h-[50px] w-[50px] rounded-full border-2 border-gray-600 relative overflow-hidden flex items-center justify-center bg -[#8798EE] text-white font-bold shrink-0 mt-1">
+                                <div className="h-[50px] w-[50px] rounded-full border-2 border-gray-600 relative overflow-hidden flex items-center justify-center bg -[#5DD3B6] text-white font-bold shrink-0 mt-1">
                                     {user.avatar ? (
                                         <img
                                             src={user.avatar}
@@ -161,7 +163,7 @@ const DashBoard = () => {
                                         onChange={handleChange}
                                         value={value}
                                         placeholder="What's on your mind?"
-                                        className="h-[60px] w-full border border-gray-700 p-3 rounded-xl focus:ring-2 focus:ring-[#0a8fd2] focus:outline-none bg -transparent text-[#0a8fd2] resize-none"
+                                        className="h-[60px] w-full border border-gray-700 p-3 rounded-xl focus:ring-2 focus:ring-[#5DD3B6] focus:outline-none bg -transparent text-[#5DD3B6] resize-none"
                                     />
 
                                     {imagePreview && (
@@ -200,7 +202,7 @@ const DashBoard = () => {
                                     variant="contained"
                                     disabled={!value.trim() && !imagePreview}
                                     sx={{
-                                        backgroundColor: '#8798EE',
+                                        backgroundColor: '#5DD3B6',
                                         borderRadius: '20px',
                                         '&:hover': { backgroundColor: '#7687d6' },
                                         '&:disabled': { backgroundColor: '#5e6067' }
@@ -268,7 +270,7 @@ const DashBoard = () => {
                             <div className={`flex-1 overflow-y-auto pr-2 custom-scrollbar ${isExpanded ? 'max-h-full' : 'max-h-[400px]'}`}>
                                 {isLoadingConnections ? (
                                     <div className="flex justify-center p-8">
-                                        <CircularProgress size={30} sx={{ color: '#8798EE' }} />
+                                        <CircularProgress size={30} sx={{ color: '#5DD3B6' }} />
                                     </div>
                                 ) : (
                                     <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
@@ -290,8 +292,8 @@ const DashBoard = () => {
                                                                     variant={isFollowing ? "outlined" : "text"}
                                                                     size="small"
                                                                     sx={{
-                                                                        color: '#8798EE',
-                                                                        borderColor: '#8798EE',
+                                                                        color: '#5DD3B6',
+                                                                        borderColor: '#5DD3B6',
                                                                         borderRadius: '15px',
                                                                         fontWeight: 'bold',
                                                                         textTransform: 'none',
@@ -308,7 +310,7 @@ const DashBoard = () => {
                                                                     alt={`${conn.firstName} ${conn.lastName}`}
                                                                     src={conn.avatar}
                                                                     sx={{
-                                                                        bgcolor: '#8798EE',
+                                                                        bgcolor: '#5DD3B6',
                                                                         width: 45,
                                                                         height: 45,
                                                                         fontSize: '1rem',

@@ -10,8 +10,12 @@ import { useNavigate } from 'react-router-dom'
 
 
 
+import { useDispatch } from 'react-redux'
+import { setUser } from '../redux/userSlice'
+
 const Login = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const schemaValidation = yup.object({
     email:yup.string().email("invalid Email").required("Email is required"),
     password:yup.string().required("Password is required")
@@ -21,7 +25,7 @@ const Login = () => {
     try {
       const response = await axios.post(`${API_URL}/login`, values);
       if (response.status === 200 && response.data.user) {
-        localStorage.setItem('user', JSON.stringify(response.data.user));
+        dispatch(setUser(response.data.user));
         navigate('/dashboard');
       } else {
         alert(response.data.message || "Login failed");

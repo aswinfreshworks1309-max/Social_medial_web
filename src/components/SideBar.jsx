@@ -6,11 +6,15 @@ import { Link } from "react-router-dom";
 
 import { useNavigate } from "react-router-dom";
 
+import { useDispatch } from 'react-redux';
+import { logout } from '../redux/userSlice';
+
 const SideBar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
+    dispatch(logout());
     navigate('/login');
   };
 

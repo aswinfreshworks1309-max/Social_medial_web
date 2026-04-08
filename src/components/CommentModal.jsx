@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { X, Send } from 'lucide-react';
 import axios from 'axios';
 import { API_URL } from '../config/config';
+import { useSelector } from 'react-redux';
 
 const CommentModal = ({ isOpen, onClose, postId, onCommentAdded, existingComments = [] }) => {
     const [comment, setComment] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const user = JSON.parse(localStorage.getItem('user')) || {};
+    const user = useSelector((state) => state.user.user) || {};
 
     if (!isOpen) return null;
 

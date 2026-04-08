@@ -8,13 +8,15 @@ import { io } from 'socket.io-client';
 
 const socket = io('http://localhost:4000');
 
+import { useSelector } from 'react-redux';
+
 const Chat = () => {
     const [contacts, setContacts] = useState([]);
     const [selectedContact, setSelectedContact] = useState(null);
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
-    const user = JSON.parse(localStorage.getItem('user')) || {};
+    const user = useSelector((state) => state.user.user) || {};
 
     const filteredContacts = contacts.filter(contact => 
         contact.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||

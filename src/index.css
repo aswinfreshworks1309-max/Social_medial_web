@@ -1,5 +1,22 @@
 @import "tailwindcss";
 
+:root {
+  --theme-bg: #000000;
+  --theme-accent: #5DD3B6;
+  --theme-accent-hover: #4fb99f;
+  --theme-border: #374151;
+  --theme-text: #ffffff;
+  --theme-text-muted: #9ca3af;
+}
+
+body {
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
+  margin: 0;
+  padding: 0;
+}
+
+
 /* From Uiverse.io by doniaskima */
 .btn-31,
 .btn-31 *,

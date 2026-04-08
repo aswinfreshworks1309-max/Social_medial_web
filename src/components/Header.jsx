@@ -6,13 +6,15 @@ import { io } from 'socket.io-client'
 import axios from 'axios'
 import { API_URL } from '../config/config'
 
+import { useSelector } from 'react-redux'
+
 const Header = () => {
     const [searchTerm, setSearchTerm] = useState('')
     const [results, setResults] = useState([])
     const [showResults, setShowResults] = useState(false)
     const [unreadCount, setUnreadCount] = useState(0)
     const navigate = useNavigate();
-    const user = JSON.parse(localStorage.getItem('user')) || {};
+    const user = useSelector((state) => state.user.user) || {};
 
     useEffect(() => {
         const socket = io('http://localhost:4000');
@@ -60,9 +62,9 @@ const Header = () => {
     }, [searchTerm])
 
     return (
-        <div  className='flex justify-between border-b border-gray-700 h-[80px] items-center bg-[#5e606721] backdrop-blur-md sticky top-0 z-50 px-8'>
+        <div  className='flex sticky top-0 z-50 justify-between border-b border-gray-700 h-[80px] items-center bg-black/80 border-b border-gray-800'>
             <div className='flex gap-12 items-center'>
-                <h1 onClick={() => navigate('/dashboard')} className='text-3xl font-bold text-[#8798EEFF] cursor-pointer tracking-tight'>ConnectHub</h1>
+                <h1 onClick={() => navigate('/dashboard')} className=' ml-8 text-3xl font-bold text-[#5DD3B6] cursor-pointer tracking-tight'>ConnectHub</h1>
                 <div className='relative hidden md:block'>
                     <input
                         type="text"
@@ -70,7 +72,7 @@ const Header = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         onFocus={() => searchTerm.length > 1 && setShowResults(true)}
                         placeholder='Search people or posts...'
-                        className='border border-gray-600 p-2 rounded-xl pl-10 placeholder:text-gray-500 w-[300px] text-white bg-black/20 focus:outline-none focus:border-[#8798EEFF] transition-all'
+                        className='border border-gray-600 p-2 rounded-xl pl-10 placeholder:text-gray-500 w-[300px] text-white bg-black/20 focus:outline-none focus:border-[#5DD3B6] transition-all'
                     />
                     <Search className='absolute top-2.5 left-3 text-gray-500' size={18} />
 
@@ -85,7 +87,7 @@ const Header = () => {
                                         setShowResults(false)
                                         setSearchTerm('')
                                     }}
-                                    className='flex items-center gap-3 p-3 hover:bg-[#8798EEFF]/10 cursor-pointer border-b border-gray-800 transition-colors'
+                                    className='flex items-center gap-3 p-3 hover:bg-[#5DD3B6]/10 cursor-pointer border-b border-gray-800 transition-colors'
                                 >
                                     <div className='w-10 h-10 rounded-full bg-[#8798EE] flex items-center justify-center font-bold text-white shrink-0 overflow-hidden'>
                                         {res.avatar ? (
@@ -121,12 +123,12 @@ const Header = () => {
                     )}
                 </Link>
 
-                <div onClick = {navigate('/profile')} className='flex items-center gap-3 cursor-pointer group'>
+                <div onClick={() => navigate('/profile')} className='flex items-center gap-3 cursor-pointer group mr-8'>
                     <div className='text-right hidden sm:block'>
-                        <p className='text-sm font-bold leading-tight group-hover:text-[#8798EEFF] transition-colors'>{user.firstName || 'User'} {user.lastName || ''}</p>
+                        <p className='text-sm font-bold leading-tight group-hover:text-[#5DD3B6] transition-colors'>{user.firstName || 'User'} {user.lastName || ''}</p>
                         <p className='text-[10px] text-gray-500 uppercase tracking-tighter'>Member</p>
                     </div>
-                    <div className='w-12 h-12 flex justify-center items-center overflow-hidden relative rounded-2xl bg-[#8798EE] font-bold text-white border-2 border-gray-600 shadow-lg group-hover:border-[#8798EEFF] transition-all'>
+                    <div className='w-12 h-12 flex justify-center items-center overflow-hidden relative rounded-2xl bg-[#8798EE] font-bold text-white border-2 border-gray-600 shadow-lg group-hover:border-[#5DD3B6] transition-all'>
                         {user.avatar ? (
                             <img src={user.avatar} alt="Profile" className='h-full w-full object-cover' />
                         ) : (

@@ -10,11 +10,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import Header from '../components/Header';
 import SideBar from '../components/SideBar';
 
+import { useSelector } from 'react-redux';
+
 const CreatePost = () => {
     const navigate = useNavigate();
     const [imagePreview, setImagePreview] = useState(null);
     const [imageFile, setImageFile] = useState(null)
-    const user = JSON.parse(localStorage.getItem('user')) || {};
+    const user = useSelector((state) => state.user.user) || {};
 
     const validationSchema = Yup.object({
         caption: Yup.string().required('Caption is required')
