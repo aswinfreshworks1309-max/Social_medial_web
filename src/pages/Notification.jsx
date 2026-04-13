@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import SideBar from '../components/SideBar'
-import { notifications } from '../data/notification'
 import { Bell } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
@@ -69,7 +68,7 @@ function Notification(){
     }
 
     return (
-        <div className='w-full min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white'>
+        <div className='w-full min-h-screen bg-theme-bg text-theme-text'>
             <Header />
             <div className='flex mt-[20px]'>
                 <aside className='w-[20%]'>
@@ -79,7 +78,7 @@ function Notification(){
                 <main className='flex-1 p-3'>
                     <div className='max-w-3xl mx-auto'>
                         <div className='flex items-center gap-3 mb-8'>
-                            <Bell className="text-[#8798EEFF]" size={32} />
+                            <Bell className="text-theme-accent" size={32} />
                             <h1 className='text-3xl font-bold'>Notifications</h1>
                         </div>
 
@@ -88,26 +87,26 @@ function Notification(){
                                 <div
                                     key={notif._id}
                                     onClick={() => handleNotificationClick(notif)}
-                                    className={`bg-[#5e606721] border border-gray-700 p-5 rounded-2xl flex items-center gap-4 hover:bg-[#5e60673a] transition cursor-pointer ${notif.isRead ? 'opacity-60' : 'opacity-100'}`}
+                                    className={`bg-theme-input border border-theme-border p-5 rounded-2xl flex items-center gap-4 hover:bg-theme-input transition cursor-pointer ${notif.isRead ? 'opacity-60' : 'opacity-100'}`}
                                 >
-                                    <div className='h-12 w-12 rounded-full bg-gray-800 flex items-center justify-center'>
-                                        <Bell size={20} className="text-[#8798EEFF]" />
+                                    <div className='h-12 w-12 rounded-full bg-theme-bg flex items-center justify-center'>
+                                        <Bell size={20} className="text-theme-accent" />
                                     </div>
                                     <div className='flex-1'>
-                                        <p className='text-gray-100'>
-                                            <span className='font-bold text-[#8798EEFF]'>{notif.senderName}</span> {notif.content}
+                                        <p className='text-theme-text'>
+                                            <span className='font-bold text-theme-accent'>{notif.senderName}</span> {notif.content}
                                         </p>
-                                        <p className='text-gray-500 text-sm mt-1'>
+                                        <p className='text-theme-text-muted text-sm mt-1'>
                                             {new Date(notif.createdAt).toLocaleDateString()} at {new Date(notif.createdAt).toLocaleTimeString()}
                                         </p>
                                     </div>
-                                    {!notif.isRead && <div className='h-2 w-2 bg-[#8798EEFF] rounded-full'></div>}
+                                    {!notif.isRead && <div className='h-2 w-2 bg-theme-accent rounded-full'></div>}
                                 </div>
                             ))}
                         </div>
 
                         {!loading && notification.length === 0 && (
-                            <div className='flex flex-col items-center justify-center py-20 text-gray-500'>
+                            <div className='flex flex-col items-center justify-center py-20 text-theme-text-muted'>
                                 <Bell size={64} className='mb-4 opacity-20' />
                                 <p>No new notifications yet.</p>
                             </div>

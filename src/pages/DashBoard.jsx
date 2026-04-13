@@ -17,7 +17,8 @@ import SideBar from "../components/SideBar";
 import PostCard from "./Post";
 import axios from "axios";
 import { API_URL } from "../config/config";
-import { UserPlus } from "lucide-react";
+import { showToast } from "../utils/toast";
+
 
 import { useSelector } from "react-redux";
 
@@ -31,6 +32,7 @@ const DashBoard = () => {
     const [isLoadingConnections, setIsLoadingConnections] = useState(false)
     const [isExpanded, setIsExpanded] = useState(false)
     const [followingList, setFollowingList] = useState([])
+    const [isPosting, setIsPosting] = useState(false)
 
 
 
@@ -53,15 +55,17 @@ const DashBoard = () => {
     // post
     const handlePost = async () => {
         if (!value && !imagePreview) {
-            alert("Please enter some text or select an image");
+            showToast.error("Please enter some text or select an image");
             return;
         }
 
+        setIsPosting(true);
         try {
             const formData = new FormData();
             formData.append('caption', value);
             formData.append('authorName', `${user.firstName || 'User'} ${user.lastName || ''}`);
             formData.append('authorId', user.email || "user123");
+            formData.append('userId', user._id);
 
             if (imageFile) {
                 formData.append('image', imageFile);
@@ -78,11 +82,13 @@ const DashBoard = () => {
                 setImagePreview(null)
                 setImageFile(null)
                 getPost() // Refresh feed
-                alert("Post created successfully!");
+                showToast.success("Post created successfully!");
             }
         } catch (error) {
             console.error("Error creating dashboard post:", error);
-            alert("Failed to create post. Please try again.");
+            showToast.error("Failed to create post. Please try again.");
+        } finally {
+            setIsPosting(false);
         }
     }
 
@@ -133,7 +139,7 @@ const DashBoard = () => {
     }
 
     return (
-        <div className="w-full min-h-screen bg-gray-500 text-[#5DD3B6]">
+        <div className="w-full min-h-screen bg-theme-bg text-theme-accent">
             <Header />
             <div className="flex mt-[20px]">
                 <aside className="w-[20%]">
@@ -143,9 +149,9 @@ const DashBoard = () => {
                 <main className="flex-1 ">
                     <div className="max-w-3xl  ml-[10%]">
                         {/* Create Post Section */}
-                        <div className="flex flex-col gap-5 w-[550px] border  border-gray-700 p-6 rounded-2xl bg-white shadow-sm mb-8">
+                        <div className="flex flex-col gap-5 w-[550px] border  border-theme-border p-6 rounded-2xl bg-theme-card shadow-sm mb-8">
                             <div className="flex gap-5 items-start">
-                                <div className="h-[50px] w-[50px] rounded-full border-2 border-gray-600 relative overflow-hidden flex items-center justify-center bg -[#5DD3B6] text-white font-bold shrink-0 mt-1">
+                                <div className="h-[50px] w-[50px] rounded-full border-2 border-theme-border relative overflow-hidden flex items-center justify-center bg-theme-accent text-black font-bold shrink-0 mt-1">
                                     {user.avatar ? (
                                         <img
                                             src={user.avatar}
@@ -153,9 +159,9 @@ const DashBoard = () => {
                                             className="h-full w-full rounded-full object-cover"
                                         />
                                     ) : (
-                                        <span>{user.firstName ? user.firstName.charAt(0) : 'U'}</span>
+                                        <span className="text-white">{user.firstName ? user.firstName.charAt(0) : 'U'}</span>
                                     )}
-                                    <div className="bg -green-500 w-[10px] h-[10px] rounded-full absolute bottom-0 right-0 border-2 border-gray-900"></div>
+                                    <div className="bg-green-500 w-[10px] h-[10px] rounded-full absolute bottom-0 right-0 border-2 border-theme-bg"></div>
                                 </div>
 
                                 <div className="flex-1 flex flex-col gap-4">
@@ -163,15 +169,15 @@ const DashBoard = () => {
                                         onChange={handleChange}
                                         value={value}
                                         placeholder="What's on your mind?"
-                                        className="h-[60px] w-full border border-gray-700 p-3 rounded-xl focus:ring-2 focus:ring-[#5DD3B6] focus:outline-none bg -transparent text-[#5DD3B6] resize-none"
+                                        className="h-[60px] w-full border border-theme-border p-3 rounded-xl focus:ring-2 focus:ring-theme-accent focus:outline-none bg-transparent text-theme-text resize-none"
                                     />
 
                                     {imagePreview && (
-                                        <div className="relative w-full max-h-[300px] overflow-hidden rounded-xl border border-gray-700">
-                                            <img src={imagePreview} alt="Preview" className="w-full h-full object-contain bg -white " />
+                                        <div className="relative w-full max-h-[300px] overflow-hidden rounded-xl border border-theme-border">
+                                            <img src={imagePreview} alt="Preview" className="w-full h-full object-contain bg-black/20" />
                                             <button
                                                 onClick={() => setImagePreview(null)}
-                                                className="absolute top-2 right-2 bg -black/50 text-[#5DD3B6] p-1 rounded-full hover:bg -black/70 transition"
+                                                className="absolute top-2 right-2 bg-black/50 text-theme-accent p-1 rounded-full hover:bg-black/70 transition"
                                             >
                                                 <svg xmlns="http://www.w3.org/2001/XMLSchema-instance" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                                             </button>
@@ -180,7 +186,7 @@ const DashBoard = () => {
                                 </div>
                             </div>
 
-                            <div className="flex justify-between items-center pt-2 border-t border-gray-700/50">
+                            <div className="flex justify-between items-center pt-2 border-t border-theme-divider">
                                 <div className="flex gap-4">
                                     <input
                                         accept="image/*"
@@ -191,7 +197,7 @@ const DashBoard = () => {
                                     />
                                     <label
                                         htmlFor="dashboard-post-image"
-                                        className="text-[#5DD3B6] hover:text-[#5DD3B6] transition p-2 cursor-pointer flex items-center justify-center rounded-full hover:bg -gray-700/10"
+                                        className="text-theme-accent hover:text-theme-accent-hover transition p-2 cursor-pointer flex items-center justify-center rounded-full hover:bg-theme-accent/10"
                                     >
                                         <svg xmlns="http://www.w3.org/2001/XMLSchema" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
                                     </label>
@@ -200,15 +206,17 @@ const DashBoard = () => {
                                 <Button
                                     onClick={handlePost}
                                     variant="contained"
-                                    disabled={!value.trim() && !imagePreview}
+                                    disabled={!imagePreview || isPosting}
                                     sx={{
-                                        backgroundColor: '#5DD3B6',
+                                        backgroundColor: 'var(--theme-accent)',
                                         borderRadius: '20px',
-                                        '&:hover': { backgroundColor: '#7687d6' },
-                                        '&:disabled': { backgroundColor: '#5e6067' }
+                                        color: 'white',
+                                        minWidth: '100px',
+                                        '&:hover': { backgroundColor: 'var(--theme-accent-hover)' },
+                                        '&:disabled': { backgroundColor: 'var(--theme-border)', opacity: 0.7 }
                                     }}
                                 >
-                                    Post
+                                    {isPosting ? 'Sharing...' : 'Post'}
                                 </Button>
                             </div>
                         </div>
@@ -218,21 +226,29 @@ const DashBoard = () => {
                         <div className="flex flex-col gap-6 ">
                             {posts.length > 0 ? (
                                 posts.map((post, index) => (
-                                    <PostCard key={post._id || index} post={post} />
+                                    <PostCard 
+                                        key={post._id || index} 
+                                        post={post} 
+                                        onPostDeleted={(deletedId) => {
+                                            setPosts(posts.filter(p => p._id !== deletedId));
+                                        }}
+                                    />
                                 ))
                             ) : (
-                                <div className="mt-10 text-center text-gray-500">
+                                <div className="mt-10 text-center text-theme-text-muted">
                                     <p>No posts yet. Be the first to share something!</p>
                                 </div>
                             )}
                         </div>
                     </div>
                 </main>
-                <div className={`w-[28%] hidden lg:block fixed right-4 top-[100px] transition-all duration-500 ease-in-out ${isExpanded ? 'z-50' : ''}`}>
+                <div className={`w-[28%] hidden lg:block fixed right-4 top-[100px] transition-all duration-500 ease-in-out ${isExpanded ? 'z-50' : ''} `}>
                     <Card sx={{
                         borderRadius: '20px',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-                        border: '1px solid rgba(0,0,0,0.05)',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+                        border: '1px solid var(--theme-border)',
+                        bgcolor: 'var(--theme-card-bg)',
+                        color: 'var(--theme-text)',
                         overflow: 'hidden',
                         height: isExpanded ? 'calc(100vh - 120px)' : 'auto',
                         display: 'flex',
@@ -244,12 +260,13 @@ const DashBoard = () => {
                             flex: 1, 
                             display: 'flex', 
                             flexDirection: 'column',
-                            overflow: 'hidden'
+                            overflow: 'hidden',
+                            bgcolor: 'var(--theme-card-bg)'
                         }}>
-                            <div className="flex justify-between items-center mb-2">
+                            <div className="flex justify-between items-center mb-2  ">
                                 <Typography variant="h6" sx={{
                                     fontWeight: 'bold',
-                                    color: '#1a1a1a',
+                                    color: 'var(--theme-text)',
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: 1
@@ -270,7 +287,7 @@ const DashBoard = () => {
                             <div className={`flex-1 overflow-y-auto pr-2 custom-scrollbar ${isExpanded ? 'max-h-full' : 'max-h-[400px]'}`}>
                                 {isLoadingConnections ? (
                                     <div className="flex justify-center p-8">
-                                        <CircularProgress size={30} sx={{ color: '#5DD3B6' }} />
+                                        <CircularProgress size={30} sx={{ color: 'var(--theme-accent)' }} />
                                     </div>
                                 ) : (
                                     <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
@@ -292,13 +309,13 @@ const DashBoard = () => {
                                                                     variant={isFollowing ? "outlined" : "text"}
                                                                     size="small"
                                                                     sx={{
-                                                                        color: '#5DD3B6',
-                                                                        borderColor: '#5DD3B6',
+                                                                        color: 'var(--theme-accent)',
+                                                                        borderColor: 'var(--theme-accent)',
                                                                         borderRadius: '15px',
                                                                         fontWeight: 'bold',
                                                                         textTransform: 'none',
                                                                         minWidth: '80px',
-                                                                        '&:hover': { bgcolor: 'transparent', color: '#7687d6', borderColor: '#7687d6' }
+                                                                        '&:hover': { bgcolor: 'transparent', color: 'var(--theme-accent-hover)', borderColor: 'var(--theme-accent-hover)' }
                                                                     }}
                                                                 >
                                                                     {isFollowing ? 'Following' : 'Follow'}
@@ -310,7 +327,8 @@ const DashBoard = () => {
                                                                     alt={`${conn.firstName} ${conn.lastName}`}
                                                                     src={conn.avatar}
                                                                     sx={{
-                                                                        bgcolor: '#5DD3B6',
+                                                                        bgcolor: 'var(--theme-accent)',
+                                                                        color: 'black',
                                                                         width: 45,
                                                                         height: 45,
                                                                         fontSize: '1rem',
@@ -322,7 +340,7 @@ const DashBoard = () => {
                                                             </ListItemAvatar>
                                                             <ListItemText
                                                                 primary={
-                                                                    <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: '#1a1a1a' }}>
+                                                                    <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: 'var(--theme-text)' }}>
                                                                         {conn.firstName} {conn.lastName}
                                                                     </Typography>
                                                                 }
@@ -355,7 +373,7 @@ const DashBoard = () => {
                                     color: 'gray',
                                     textTransform: 'none',
                                     fontSize: '0.8rem',
-                                    '&:hover': { bgcolor: 'transparent', color: '#1a1a1a' }
+                                    '&:hover': { bgcolor: 'transparent', color: 'var(--theme-accent)' }
                                 }}
                             >
                                 {isExpanded ? 'Show less' : 'View all suggestions'}

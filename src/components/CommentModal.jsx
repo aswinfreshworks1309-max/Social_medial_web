@@ -43,12 +43,12 @@ const CommentModal = ({ isOpen, onClose, postId, onCommentAdded, existingComment
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
             <div
-                className="bg-[#1e2330] border border-gray-700 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
+                className="bg-theme-card border border-theme-border w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
-                <div className="flex justify-between items-center p-4 border-b border-gray-700">
-                    <h3 className="text-xl font-semibold text-white">Comments</h3>
+                <div className="flex justify-between items-center p-4 border-b border-theme-border">
+                    <h3 className="text-xl font-semibold text-theme-text">Comments</h3>
                     <button
                         onClick={onClose}
                         className="text-gray-400 hover:text-white transition-colors p-1 rounded-full hover:bg-gray-800"
@@ -62,31 +62,31 @@ const CommentModal = ({ isOpen, onClose, postId, onCommentAdded, existingComment
                     {existingComments.length > 0 ? (
                         existingComments.map((c, idx) => (
                             <div key={c._id || idx} className="flex gap-3 animate-in slide-in-from-bottom-2 duration-300">
-                                <div className="h-8 w-8 rounded-full bg-[#8798EE] flex items-center justify-center text-white text-xs font-bold shrink-0">
+                                <div className="h-8 w-8 rounded-full bg-theme-accent flex items-center justify-center text-black text-xs font-bold shrink-0">
                                     {c.authorName ? c.authorName.charAt(0) : 'U'}
                                 </div>
-                                <div className="flex-1 bg-gray-800/50 rounded-2xl p-3 border border-gray-700/50">
+                                <div className="flex-1 bg-theme-input/50 rounded-2xl p-3 border border-theme-border/50">
                                     <div className="flex justify-between items-center mb-1">
-                                        <span className="text-sm font-bold text-white">{c.authorName}</span>
-                                        <span className="text-[10px] text-gray-500">
+                                        <span className="text-sm font-bold text-theme-text">{c.authorName}</span>
+                                        <span className="text-[10px] text-theme-text-muted">
                                             {c.createdAt ? new Date(c.createdAt).toLocaleDateString() : 'Just now'}
                                         </span>
                                     </div>
-                                    <p className="text-sm text-gray-300 leading-relaxed">{c.text}</p>
+                                    <p className="text-sm text-theme-text-secondary leading-relaxed">{c.text}</p>
                                 </div>
                             </div>
                         ))
                     ) : (
-                        <div className="text-center py-10 text-gray-500 italic">
+                        <div className="text-center py-10 text-theme-text-muted italic">
                             No comments yet. Be the first to comment!
                         </div>
                     )}
                 </div>
 
                 {/* Input Area */}
-                <form onSubmit={handleSubmit} className="p-4 bg-gray-900/50 border-t border-gray-700">
+                <form onSubmit={handleSubmit} className="p-4 bg-theme-bg/50 border-t border-theme-border">
                     <div className="flex gap-3 items-center">
-                        <div className="h-10 w-10 rounded-full bg-[#8798EE] flex items-center justify-center text-white font-bold shrink-0">
+                        <div className="h-10 w-10 rounded-full bg-theme-accent flex items-center justify-center text-black font-bold shrink-0">
                             {user.firstName ? user.firstName.charAt(0) : 'U'}
                         </div>
                         <div className="flex-1 relative">
@@ -95,15 +95,15 @@ const CommentModal = ({ isOpen, onClose, postId, onCommentAdded, existingComment
                                 value={comment}
                                 onChange={(e) => setComment(e.target.value)}
                                 placeholder="Write a comment..."
-                                className="w-full bg-gray-800 border border-gray-700 text-white rounded-full py-2.5 px-4 pr-12 focus:outline-none focus:ring-2 focus:ring-[#8798EEFF] focus:border-transparent transition-all"
+                                className="w-full bg-theme-input border border-theme-border text-theme-text rounded-full py-2.5 px-4 pr-12 focus:outline-none focus:ring-2 focus:ring-theme-accent focus:border-transparent transition-all"
                                 disabled={isSubmitting}
                             />
                             <button
                                 type="submit"
                                 disabled={!comment.trim() || isSubmitting}
                                 className={`absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full transition-all ${comment.trim() && !isSubmitting
-                                        ? 'text-[#8798EE] hover:bg-gray-700'
-                                        : 'text-gray-600'
+                                        ? 'text-theme-accent hover:bg-theme-bg'
+                                        : 'text-theme-text-muted'
                                     }`}
                             >
                                 <Send size={18} />

@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import SideBar from '../components/SideBar';
 import axios from 'axios';
 import { API_URL } from '../config/config';
+import { showToast } from '../utils/toast';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from '../redux/userSlice';
@@ -23,6 +24,8 @@ const Profile = () => {
     const [open, setOpen] = useState(false);
     const [friendsOpen, setFriendsOpen] = useState(false);
     const [tabValue, setTabValue] = useState(0);
+    const [galleryTab, setGalleryTab] = useState('posts');
+    const [savedPosts, setSavedPosts] = useState([]);
     const [avatarFile, setAvatarFile] = useState(null);
     const [loading, setLoading] = useState(false);
     
@@ -44,6 +47,15 @@ const Profile = () => {
         bio: '',
     });
 
+    const fetchSavedPosts = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/posts/saved/${loggedInUser._id}`);
+            setSavedPosts(response.data.posts || []);
+        } catch (err) {
+            console.error("Error fetching saved posts:", err);
+        }
+    };
+
     const fetchProfileData = async () => {
         setLoading(true);
         try {
@@ -57,6 +69,7 @@ const Profile = () => {
                     lastName: loggedInUser.lastName || '',
                     bio: loggedInUser.bio || '',
                 });
+                fetchSavedPosts(); // Fetch saved posts for own profile
             } else {
                 // Fetch other user profile by ID
                 const response = await axios.get(`${API_URL}/profile/${id}`);
@@ -155,23 +168,24 @@ const Profile = () => {
                 setProfileUser(updatedUser);
                 dispatch(setUser(updatedUser));
                 handleClose();
+                showToast.success("Profile updated successfully!");
             }
         } catch (err) {
             console.error(err);
-            alert("Failed to update profile");
+            showToast.error("Failed to update profile");
         } finally {
             setLoading(false);
         }
     };
 
-    if (loading && !profileUser) return <div className='w-full h-screen bg-gray-900 flex items-center justify-center text-white'>Loading Profile...</div>;
-    if (!profileUser) return <div className='w-full h-screen bg-gray-900 flex items-center justify-center text-white'>User not found</div>;
+    if (loading && !profileUser) return <div className='w-full h-screen bg-theme-bg flex items-center justify-center text-theme-text'>Loading Profile...</div>;
+    if (!profileUser) return <div className='w-full h-screen bg-theme-bg flex items-center justify-center text-theme-text'>User not found</div>;
 
     return (
-        <div className='w-full min-h-screen bg-black text-white'>
+        <div className='w-full min-h-screen bg-theme-bg text-theme-text'>
             <Header />
-            <div className='flex  '>
-                <aside className='w-[20%]'>
+            <div className='flex mt-[20px] '>
+                <aside className='w-[20%] '>
                     <SideBar />
                 </aside>
 
@@ -180,11 +194,11 @@ const Profile = () => {
                         <div className='flex justify-between items-start gap-16 mb-12'>
                             <div className='shrink-0'>
                                 <div className='relative'>
-                                    <div className='h-40 w-40 rounded-full bg-[#5DD3B6] flex items-center justify-center text-5xl font-bold border-4 border-[#5DD3B6] shadow-2xl overflow-hidden'>
+                                    <div className='h-40 w-40 rounded-full bg-theme-accent flex items-center justify-center text-5xl font-bold border-4 border-theme-accent shadow-2xl overflow-hidden'>
                                         {profileUser.avatar ? (
                                             <img src={profileUser.avatar} alt="Profile" className='h-full w-full object-cover' />
                                         ) : (
-                                            <span>{profileUser.firstName?.charAt(0)}</span>
+                                            <span className='text-white'>{profileUser.firstName?.charAt(0) || "U"}</span>
                                         )}
                                     </div>
                                     <div className='absolute bottom-3 right-3 w-5 h-5 bg-green-400 rounded-full border-2 border-slate-900'></div>
@@ -194,26 +208,26 @@ const Profile = () => {
                             <div className='flex-1'>
                                 <div className='flex items-baseline gap-4 mb-2'>
                                     <h1 className='text-3xl font-bold'>{profileUser.firstName} {profileUser.lastName}</h1>
-                                    <span className='px-4 py-1 bg-[#5DD3B6] rounded-full text-[12px] font-semibold tracking-wide'>
-                                        {isOwnProfile ? 'YOU' : 'MEMBER'}
+                                    <span className='px-4 py-1 bg-theme-accent rounded-full text-[12px] font-semibold tracking-wide text-white'>
+                                        {isOwnProfile ? 'YOU' : 'USER'}
                                     </span>
                                 </div>
-                                <p className='text-gray-400 flex items-center gap-2 mb-6'>
+                                <p className='text-theme-text-muted flex items-center gap-2 mb-6'>
                                    <Mail size={16} /> {profileUser.email}
                                 </p>
 
                                 <div className='flex gap-12 mb-6'>
                                     <div className='text-center cursor-pointer hover:scale-105 transition-transform'>
-                                        <p className='text-2xl font-bold text-white'>{stats.postCount}</p>
-                                        <p className='text-gray-400 text-sm uppercase tracking-wider'>Posts</p>
+                                        <p className='text-2xl font-bold '>{stats.postCount}</p>
+                                        <p className='text-theme-text-muted text-sm uppercase tracking-wider'>Posts</p>
                                     </div>
                                     <div className='text-center cursor-pointer hover:scale-105 transition-transform' onClick={handleFriendsOpen}>
-                                        <p className='text-2xl font-bold text-white'>{stats.followers}</p>
-                                        <p className='text-gray-400 text-sm uppercase tracking-wider'>Followers</p>
+                                        <p className='text-2xl font-bold '>{stats.followers}</p>
+                                        <p className='text-theme-text-muted text-sm uppercase tracking-wider'>Followers</p>
                                     </div>
                                     <div className='text-center cursor-pointer hover:scale-105 transition-transform' onClick={handleFriendsOpen}>
-                                        <p className='text-2xl font-bold text-white'>{stats.following}</p>
-                                        <p className='text-gray-400 text-sm uppercase tracking-wider'>Following</p>
+                                        <p className='text-2xl font-bold '>{stats.following}</p>
+                                        <p className='text-theme-text-muted text-sm uppercase tracking-wider'>Following</p>
                                     </div>
                                 </div>
 
@@ -224,9 +238,9 @@ const Profile = () => {
                                                 onClick={handleOpen}
                                                 variant="outlined"
                                                 sx={{
-                                                    borderColor: '#5DD3B6', color: '#5DD3B6', textTransform: 'none',
+                                                    borderColor: 'var(--theme-accent)', color: 'var(--theme-accent)', textTransform: 'none',
                                                     fontSize: '16px', padding: '8px 24px', borderRadius: '12px', borderWidth: '2px',
-                                                    '&:hover': { borderColor: '#5DD3B6', backgroundColor: '#5DD3B6', color: 'black' }
+                                                    '&:hover': { borderColor: 'var(--theme-accent)', backgroundColor: 'var(--theme-accent)', color: 'white' }
                                                 }}
                                             >
                                                 Edit Profile
@@ -235,9 +249,9 @@ const Profile = () => {
                                                 onClick={handleFriendsOpen}
                                                 variant="contained"
                                                 sx={{
-                                                    background: '#5DD3B6', textTransform: 'none', fontSize: '16px',
-                                                    padding: '8px 24px', borderRadius: '12px',color:'black',    
-                                                    '&:hover': { color: '#5DD3B6', borderColor: '#5DD3B6', backgroundColor: 'transparent' }
+                                                    background: 'var(--theme-accent)', textTransform: 'none', fontSize: '16px',
+                                                    padding: '8px 24px', borderRadius: '12px',color:'white',    
+                                                    '&:hover': { color: 'var(--theme-accent)', borderColor: 'var(--theme-accent)', backgroundColor: 'transparent' }
                                                 }}
                                             >
                                                 <Users className='w-5 h-5 mr-2' />
@@ -250,11 +264,11 @@ const Profile = () => {
                                                 onClick={handleFollow}
                                                 variant={isFollowing ? "outlined" : "contained"}
                                                 sx={{
-                                                    background: isFollowing ? 'transparent' : '#5DD3B6',
-                                                    color: isFollowing ? '#5DD3B6' : 'white',
-                                                    borderColor: '#5DD3B6',
+                                                    background: isFollowing ? 'transparent' : 'var(--theme-accent)',
+                                                    color: isFollowing ? 'var(--theme-accent)' : 'white',
+                                                    borderColor: 'var(--theme-accent)',
                                                     textTransform: 'none', fontSize: '16px', padding: '8px 24px', borderRadius: '12px',
-                                                    '&:hover': { background: isFollowing ? '#5DD3B6' : 'transparent', color: isFollowing ? 'white' : '#5DD3B6' }
+                                                    '&:hover': { background: isFollowing ? 'var(--theme-accent)' : 'transparent', color: isFollowing ? 'white' : 'var(--theme-accent)' }
                                                 }}
                                             >
                                                 {isFollowing ? <UserMinus className='w-5 h-5 mr-2' /> : <UserPlus className='w-5 h-5 mr-2' />}
@@ -263,9 +277,11 @@ const Profile = () => {
                                             <Button
                                                 onClick={handleMessage}
                                                 variant="contained"
-                                                style={{ backgroundColor: '#22c55e' }}
                                                 sx={{
+                                                    bgcolor: 'var(--theme-success)',
+                                                    color: 'white',
                                                     textTransform: 'none', fontSize: '16px', padding: '8px 24px', borderRadius: '12px',
+                                                    '&:hover': { bgcolor: 'var(--theme-success-hover)' }
                                                 }}
                                             >
                                                 <MessageCircle className='w-5 h-5 mr-2' />
@@ -277,35 +293,56 @@ const Profile = () => {
                             </div>
                         </div>
 
-                        <div className='border-t border-gray-700 pt-8 mb-8'>
+                        <div className='border-t border-theme-divider pt-8 mb-8'>
                             <h3 className='text-lg font-semibold mb-3'>About</h3>
-                            <p className='text-gray-400 leading-relaxed max-w-2xl text-justify'>
+                            <p className='text-theme-text leading-relaxed max-w-2xl text-justify'>
                                 {profileUser.bio || 'This user has not set a bio yet.'}
                             </p>
                         </div>
 
                         <div className='border-t border-gray-700 pt-6'>
-                            <h3 className='text-lg font-semibold mb-8'>{isOwnProfile ? 'Your Gallery' : `${profileUser.firstName}'s Posts`}</h3>
+                            <div className='flex items-center justify-between mb-8'>
+                                <h3 className='text-lg font-semibold'>{isOwnProfile ? 'Your Gallery' : `${profileUser.firstName}'s Posts`}</h3>
+                                {isOwnProfile && (
+                                    <div className='flex gap-2 bg-theme-card/50 p-1 rounded-xl border border-theme-border'>
+                                        <button 
+                                            onClick={() => setGalleryTab('posts')}
+                                            className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${galleryTab === 'posts' ? 'bg-theme-accent text-white shadow-lg' : 'text-theme-text-muted hover:text-theme-text'}`}
+                                        >
+                                            Posts
+                                        </button>
+                                        <button 
+                                            onClick={() => setGalleryTab('saved')}
+                                            className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${galleryTab === 'saved' ? 'bg-theme-accent text-white shadow-lg' : 'text-theme-text-muted hover:text-theme-text'}`}
+                                        >
+                                            Saved
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+
                             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-12'>
-                                {stats.posts && stats.posts.length > 0 ? (
-                                    stats.posts.map((post, i) => (
-                                        <div key={i} className='flex flex-col bg-gray-800/40 rounded-2xl border border-gray-700/50 overflow-hidden hover:border-[#5DD3B6] transition-all duration-300 shadow-lg group'>
+                                {(galleryTab === 'posts' ? stats.posts : savedPosts).length > 0 ? (
+                                    (galleryTab === 'posts' ? stats.posts : savedPosts).map((post, i) => (
+                                        <div key={i} className='flex flex-col bg-theme-card/40 rounded-2xl border border-theme-border overflow-hidden hover:border-theme-accent transition-all duration-300 shadow-lg group'>
                                             <div className='aspect-video overflow-hidden'>
                                                 <img src={post.image} alt="post" className='w-full h-full object-cover group-hover:scale-110 transition duration-700' />
                                             </div>
                                             <div className='p-4 flex flex-col gap-3'>
                                                 {post.caption && <p className='text-[13px] text-gray-200 line-clamp-2 leading-relaxed h-[40px]'>{post.caption}</p>}
-                                                <div className='flex items-center justify-between pt-2 border-t border-gray-700/50'>
+                                                <div className='flex items-center justify-between pt-2 border-t border-theme-divider'>
                                                     <div className='flex gap-5'>
-                                                        <div className='flex items-center gap-1.5'><Heart size={18} className='text-red-500' /><span className='text-sm font-bold text-gray-300'>{post.likes?.length || 0}</span></div>
-                                                        <div className='flex items-center gap-1.5'><MessageCircle size={18} className='text-[#5DD3B6]' /><span className='text-sm font-bold text-gray-300'>{post.comments?.length || 0}</span></div>
+                                                        <div className='flex items-center gap-1.5'><Heart size={18} className='text-red-500' /><span className='text-sm font-bold text-theme-text-muted'>{post.likes?.length || 0}</span></div>
+                                                        <div className='flex items-center gap-1.5'><MessageCircle size={18} className='text-theme-accent' /><span className='text-sm font-bold text-theme-text-muted'>{post.comments?.length || 0}</span></div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     ))
                                 ) : (
-                                    <div className='col-span-full text-center py-12 text-gray-500 italic'>No posts shared yet.</div>
+                                    <div className='col-span-full text-center py-12 text-theme-text-muted italic'>
+                                        {galleryTab === 'posts' ? 'No posts shared yet.' : 'No saved posts yet.'}
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -314,36 +351,36 @@ const Profile = () => {
             </div>
 
             {/* Edit Profile Modal */}
-            <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth PaperProps={{ sx: { bgcolor: '#1a1c23', color: 'white', borderRadius: '24px', border: '1px solid #374151', padding: '12px' } }}>
+            <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth PaperProps={{ sx: { bgcolor: 'var(--theme-card-bg)', color: 'var(--theme-text)', borderRadius: '24px', border: '1px solid var(--theme-border)', padding: '12px' } }}>
                 <DialogTitle sx={{ fontSize: '24px', fontWeight: 'bold' }}>Edit Profile</DialogTitle>
                 <DialogContent>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, pt: 2 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
                             <div className='relative group cursor-pointer' onClick={() => document.getElementById('avatar-upload').click()}>
-                                <div className='h-32 w-32 rounded-full border-4 border-[#5DD3B6] overflow-hidden bg-gray-800 flex items-center justify-center transition-all group-hover:brightness-50 shadow-xl'>
-                                    {avatarFile ? <img src={URL.createObjectURL(avatarFile)} alt="Preview" className='h-full w-full object-cover' /> : (profileUser.avatar ? <img src={profileUser.avatar} alt="Current" className='h-full w-full object-cover' /> : <div className='text-4xl text-gray-500 font-bold'>{profileUser.firstName?.charAt(0)}</div>)}
+                                <div className='h-32 w-32 rounded-full border-4 border-theme-accent overflow-hidden bg-theme-bg flex items-center justify-center transition-all group-hover:brightness-50 shadow-xl'>
+                                    {avatarFile ? <img src={URL.createObjectURL(avatarFile)} alt="Preview" className='h-full w-full object-cover' /> : (profileUser.avatar ? <img src={profileUser.avatar} alt="Current" className='h-full w-full object-cover' /> : <div className='text-4xl text-theme-text-muted font-bold'>{profileUser.firstName?.charAt(0)}</div>)}
                                 </div>
                                 <div className='absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity'><Camera size={32} className='text-white' /></div>
                                 <input id='avatar-upload' type="file" className='hidden' accept='image/*' onChange={handleFileChange} />
                             </div>
                         </Box>
                         <Box sx={{ display: 'flex', gap: 2 }}>
-                            <TextField label="First Name" name="firstName" value={editData.firstName} onChange={handleChange} fullWidth InputLabelProps={{ style: { color: '#9ca3af' } }} inputProps={{ style: { color: 'white' } }} sx={{ '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: '#374151' }, '&:hover fieldset': { borderColor: '#5DD3B6' } } }} />
-                            <TextField label="Last Name" name="lastName" value={editData.lastName} onChange={handleChange} fullWidth InputLabelProps={{ style: { color: '#9ca3af' } }} inputProps={{ style: { color: 'white' } }} sx={{ '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: '#374151' }, '&:hover fieldset': { borderColor: '#5DD3B6' } } }} />
+                            <TextField label="First Name" name="firstName" value={editData.firstName} onChange={handleChange} fullWidth InputLabelProps={{ style: { color: 'var(--theme-text-muted)' } }} inputProps={{ style: { color: 'var(--theme-text)' } }} sx={{ '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: 'var(--theme-border)' }, '&:hover fieldset': { borderColor: 'var(--theme-accent)' } } }} />
+                            <TextField label="Last Name" name="lastName" value={editData.lastName} onChange={handleChange} fullWidth InputLabelProps={{ style: { color: 'var(--theme-text-muted)' } }} inputProps={{ style: { color: 'var(--theme-text)' } }} sx={{ '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: 'var(--theme-border)' }, '&:hover fieldset': { borderColor: 'var(--theme-accent)' } } }} />
                         </Box>
-                        <TextField label="Bio" name="bio" value={editData.bio} onChange={handleChange} fullWidth multiline rows={4} InputLabelProps={{ style: { color: '#9ca3af' } }} inputProps={{ style: { color: 'white' } }} sx={{ '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: '#374151' }, '&:hover fieldset': { borderColor: '#5DD3B6' } } }} />
+                        <TextField label="Bio" name="bio" value={editData.bio} onChange={handleChange} fullWidth multiline rows={4} InputLabelProps={{ style: { color: 'var(--theme-text-muted)' } }} inputProps={{ style: { color: 'var(--theme-text)' } }} sx={{ '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: 'var(--theme-border)' }, '&:hover fieldset': { borderColor: 'var(--theme-accent)' } } }} />
                     </Box>
                 </DialogContent>
                 <DialogActions sx={{ p: 3 }}>
-                    <Button onClick={handleClose} disabled={loading} sx={{ color: '#9ca3af', textTransform: 'none' }}>Cancel</Button>
-                    <Button onClick={handleSave} disabled={loading} variant="contained" sx={{ bgcolor: '#5DD3B6', textTransform: 'none', px: 4, borderRadius: '12px', fontWeight: 'bold', '&:hover': { bgcolor: '#7687d6' } }}>{loading ? 'Updating...' : 'Save Changes'}</Button>
+                    <Button onClick={handleClose} disabled={loading} sx={{ color: 'black', textTransform: 'none' }}>Cancel</Button>
+                    <Button onClick={handleSave} disabled={loading} variant="contained" sx={{ bgcolor: 'var(--theme-accent)', color: 'white', textTransform: 'none', px: 4, borderRadius: '12px', fontWeight: 'bold', '&:hover': { bgcolor: 'var(--theme-accent-hover)' } }}>{loading ? 'Updating...' : 'Save Changes'}</Button>
                 </DialogActions>
             </Dialog>
 
             {/* Friends Modal */}
-            <Dialog open={friendsOpen} onClose={() => setFriendsOpen(false)} maxWidth="xs" fullWidth PaperProps={{ sx: { bgcolor: '#1a1c23', color: 'white', borderRadius: '24px', border: '1px solid #374151' } }}>
+            <Dialog open={friendsOpen} onClose={() => setFriendsOpen(false)} maxWidth="xs" fullWidth PaperProps={{ sx: { bgcolor: 'var(--theme-card-bg)', color: 'var(--theme-text)', borderRadius: '24px', border: '1px solid var(--theme-border)' } }}>
                 <DialogTitle sx={{ p: 0 }}>
-                    <Tabs value={tabValue} onChange={(e, v) => setTabValue(v)} variant="fullWidth" sx={{ '& .MuiTabs-indicator': { bgcolor: '#5DD3B6' }, '& .MuiTab-root': { color: '#9ca3af', textTransform: 'none', fontSize: '16px', py: 2 }, '& .Mui-selected': { color: '#5DD3B6 !important' } }}>
+                    <Tabs value={tabValue} onChange={(e, v) => setTabValue(v)} variant="fullWidth" sx={{ '& .MuiTabs-indicator': { bgcolor: 'var(--theme-accent)' }, '& .MuiTab-root': { color: 'var(--theme-text-muted)', textTransform: 'none', fontSize: '16px', py: 2 }, '& .Mui-selected': { color: 'var(--theme-accent) !important' } }}>
                         <Tab label={`Followers (${stats.followers || 0})`} />
                         <Tab label={`Following (${stats.following || 0})`} />
                     </Tabs>
@@ -353,8 +390,8 @@ const Profile = () => {
                         {(tabValue === 0 ? friendsData.followers : friendsData.following).length > 0 ? (
                             (tabValue === 0 ? friendsData.followers : friendsData.following).map((friend, idx) => (
                                 <ListItem key={idx} sx={{ px: 0, cursor: 'pointer' }} onClick={() => { navigate(`/profile/${friend._id}`); setFriendsOpen(false); }}>
-                                    <ListItemAvatar><Avatar src={friend.avatar} sx={{ bgcolor: '#5DD3B6' }}>{friend.firstName?.charAt(0)}</Avatar></ListItemAvatar>
-                                    <ListItemText primary={`${friend.firstName} ${friend.lastName}`} secondary={friend.email} primaryTypographyProps={{ sx: { color: 'white', fontWeight: 'bold' } }} secondaryTypographyProps={{ sx: { color: '#9ca3af', fontSize: '12px' } }} />
+                                    <ListItemAvatar><Avatar src={friend.avatar} sx={{ bgcolor: 'var(--theme-accent)', color: 'black' }}>{friend.firstName?.charAt(0)}</Avatar></ListItemAvatar>
+                                    <ListItemText primary={`${friend.firstName} ${friend.lastName}`} secondary={friend.email} primaryTypographyProps={{ sx: { color: 'var(--theme-text)', fontWeight: 'bold' } }} secondaryTypographyProps={{ sx: { color: 'var(--theme-text-muted)', fontSize: '12px' } }} />
                                 </ListItem>
                             ))
                         ) : (

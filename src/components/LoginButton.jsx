@@ -5,26 +5,17 @@ const Button = ({ text = "Button", type = "button", onClick, className = "" }) =
     <>
       <style>{`
         .box-button {
-          color: black;
+          color: white;
           cursor: pointer;
           outline: none;
           border: none;
-          background-color: #8798EEFF;
+          background-color: var(--theme-accent);
           border-radius:10px;
+          transition: transform 0.2s;
         }
 
-        .box-span {
-          width: 170px;
-          display: block;
-          transition: 0.5s linear;
-          position: relative;
-          overflow: hidden;
-          padding: 15px;
-          text-align: center;
-          border-radius:10px;
-          background: transparent;
-          text-transform: uppercase;
-          font-weight: 600;
+        .box-button:active {
+          transform: scale(0.95);
         }
 
         .box-span::before {
@@ -32,45 +23,33 @@ const Button = ({ text = "Button", type = "button", onClick, className = "" }) =
           content: "";
           left: 0;
           bottom: 0;
-          height: 4px;
+          height: 100%;
           width: 100%;
-          border-bottom: 4px solid transparent;
-          border-left: 4px solid transparent;
-          box-sizing: border-box;
-          transform: translateX(100%);
-        }
-
-        .box-span::after {
-          position: absolute;
-          content: "";
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 4px;
-          border-top: 4px solid transparent;
-          border-right: 4px solid transparent;
-          box-sizing: border-box;
-          transform: translateX(-100%);
-        }
-
-        .box-span:hover {
-          box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+          background: var(--theme-accent-hover);
+          z-index: -1;
+          transform: scaleX(0);
+          transform-origin: right;
+          transition: transform 0.3s ease-out;
+          border-radius: 10px;
         }
 
         .box-span:hover::before {
-          border-color: #262626;
-          height: 100%;
-          width: 100%;
-          transform: translateX(0);
-          transition: 0.3s transform linear, 0.3s height linear 0.3s;
+          transform: scaleX(1);
+          transform-origin: left;
         }
 
-        .box-span:hover::after {
-          border-color: #262626;
-          height: 100%;
-          width: 100%;
-          transform: translateX(0);
-          transition: 0.3s transform linear, 0.3s height linear 0.5s;
+        .box-span {
+          width: 170px;
+          display: block;
+          position: relative;
+          z-index: 1;
+          padding: 15px;
+          text-align: center;
+          border-radius:10px;
+          background: transparent;
+          text-transform: uppercase;
+          font-weight: 700;
+          letter-spacing: 1px;
         }
       `}</style>
 

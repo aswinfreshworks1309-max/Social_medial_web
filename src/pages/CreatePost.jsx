@@ -4,6 +4,7 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { API_URL } from '../config/config';
+import { showToast } from '../utils/toast';
 import { useNavigate } from 'react-router-dom';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import CloseIcon from '@mui/icons-material/Close';
@@ -40,6 +41,7 @@ const CreatePost = () => {
             formData.append('caption', values.caption);
             formData.append('authorName', `${user.firstName || 'User'} ${user.lastName || ''}`);
             formData.append('authorId', user.email || "user123");
+            formData.append('userId', user._id);
 
             if (imageFile) {
                 formData.append('image', imageFile);
@@ -51,17 +53,17 @@ const CreatePost = () => {
                 },
             });
             if (response.status === 201 || response.status === 200) {
-                alert("Post shared successfully!");
+                showToast.success("Post shared successfully!");
                 navigate('/dashboard');
             }
         } catch (error) {
             console.error("Error creating post:", error);
-            alert("Failed to share post. Please try again.");
+            showToast.error("Failed to share post. Please try again.");
         }
     };
 
     return (
-        <div className='w-full min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white'>
+        <div className='w-full min-h-screen bg-theme-bg text-theme-text'>
             <Header />
             <div className='flex mt-[20px]'>
                 <aside className='w-[20%]'>
@@ -69,9 +71,9 @@ const CreatePost = () => {
                 </aside>
 
                 <main className='flex-1 p-2 mt-[100px]'>
-                    <div className='max-w-4xl mx-auto bg-gray-200 rounded-3xl overflow-hidden border border-gray-800 flex flex-col md:flex-row shadow-2xl'>
+                    <div className='max-w-4xl mx-auto bg-theme-card rounded-3xl overflow-hidden border border-theme-border flex flex-col md:flex-row shadow-2xl'>
                         {/* Image Section */}
-                        <div className="w-full md:w-1/2 h-[400px] md:h-auto flex items-center justify-center bg-gray-900 border-r border-gray-800 relative">
+                        <div className="w-full md:w-1/2 h-[400px] md:h-auto flex items-center justify-center bg-black/20 border-r border-theme-border relative">
                             {imagePreview ? (
                                 <div className="relative w-full h-full">
                                     <img src={imagePreview} alt="Preview" className="w-full h-full object-contain" />
@@ -93,11 +95,11 @@ const CreatePost = () => {
                                         onChange={handleImageChange}
                                     />
                                     <label htmlFor="icon-button-file">
-                                        <IconButton color="primary" aria-label="upload picture" component="span" sx={{ fontSize: 60, color: '#8798EE' }}>
+                                        <IconButton color="primary" aria-label="upload picture" component="span" sx={{ fontSize: 60, color: 'var(--theme-text)' }}>
                                             <PhotoCamera sx={{ fontSize: 60 }} />
                                         </IconButton>
                                     </label>
-                                    <p className="text-gray-400">Click to upload image</p>
+                                    <p className="text-theme-text">Click to upload image</p>
                                 </div>
                             )}
                         </div>
@@ -112,19 +114,20 @@ const CreatePost = () => {
                                 {({ isSubmitting, isValid }) => (
                                     <Form className="h-full flex flex-col">
                                         <div className="flex justify-between items-center mb-10">
-                                            <h1 className="text-2xl font-bold text-[#8798EE]">New Post</h1>
+                                            <h1 className="text-2xl font-bold text-theme-accent">New Post</h1>
                                             <Button
                                                 type="submit"
                                                 variant="contained"
                                                 disabled={isSubmitting || !isValid || !imagePreview}
                                                 sx={{
-                                                    backgroundColor: '#8798EE',
+                                                    backgroundColor: 'var(--theme-accent)',
                                                     borderRadius: '20px',
+                                                    color: 'white',
                                                     padding: '8px 24px',
-                                                    '&:hover': { backgroundColor: '#7687d6' }
+                                                    '&:hover': { backgroundColor: 'var(--theme-accent-hover)' }
                                                 }}
                                             >
-                                                Share
+                                                {isSubmitting ? 'Sharing...' : 'Share'}
                                             </Button>
                                         </div>
 
@@ -132,13 +135,13 @@ const CreatePost = () => {
                                             <div className="flex items-center gap-4">
                                                 <Avatar
                                                     src={user.avatar}
-                                                    sx={{ width: 48, height: 48, backgroundColor: '#8798EE' }}
+                                                    sx={{ width: 48, height: 48, backgroundColor: 'var(--theme-accent)' }}
                                                 >
                                                     {!user.avatar && (user.firstName ? user.firstName.charAt(0) : 'U')}
                                                 </Avatar>
                                                 <div>
-                                                    <h2 className="text-md font-semibold text-black">{user.firstName || 'User'} {user.lastName || ''}</h2>
-                                                    <h3 className="text-xs text-gray-700">@{user.firstName ? user.firstName.toLowerCase() : 'user'}</h3>
+                                                    <h2 className="text-md font-semibold text-theme-text">{user.firstName || 'User'} {user.lastName || ''}</h2>
+                                                    <h3 className="text-xs text-theme-text-muted">@{user.firstName ? user.firstName.toLowerCase() : 'user'}</h3>
                                                 </div>
                                             </div>
 
@@ -146,7 +149,7 @@ const CreatePost = () => {
                                                 as="textarea"
                                                 name="caption"
                                                 placeholder="Write your caption here..."
-                                                className="w-full h-[200px] bg-transparent border-none text-lg focus:ring-0 resize-none placeholder-gray-500 text-black p-[10px]"
+                                                className="w-full h-[200px] bg-transparent border-none text-lg focus:ring-0 resize-none placeholder-theme-text-muted text-theme-text p-[10px]"
                                             />
                                         </div>
                                     </Form>
